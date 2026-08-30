@@ -38,7 +38,7 @@ void loader_cleanup() {
  * are laid directly on top of the bytes, the way the assignment wants it.
  */
 void load_and_run_elf(char** argv) {
-  fd = open((char*)argv[1], O_RDONLY);
+  fd = open(argv[1], O_RDONLY);
   if (fd < 0) {
     perror("open");
     exit(1);
@@ -47,7 +47,7 @@ void load_and_run_elf(char** argv) {
   /* figure out how big the file is so we know how much to read/malloc */
   off_t file_size = lseek(fd, 0, SEEK_END);
   if (file_size <= 0) {
-    fprintf(stderr, "loader: could not determine size of %s\n", (char*)argv[1]);
+    fprintf(stderr, "loader: could not determine size of %s\n", argv[1]);
     exit(1);
   }
   lseek(fd, 0, SEEK_SET);
@@ -60,7 +60,7 @@ void load_and_run_elf(char** argv) {
 
   ssize_t n = read(fd, file_buf, file_size);
   if (n != file_size) {
-    fprintf(stderr, "loader: short read on %s\n", (char*)argv[1]);
+    fprintf(stderr, "loader: short read on %s\n", argv[1]);
     exit(1);
   }
 
@@ -68,7 +68,7 @@ void load_and_run_elf(char** argv) {
   ehdr = (Elf32_Ehdr *)file_buf;
 
   if (memcmp(ehdr->e_ident, ELFMAG, SELFMAG) != 0) {
-    fprintf(stderr, "loader: %s is not an ELF file\n", (char*)argv[1]);
+    fprintf(stderr, "loader: %s is not an ELF file\n", argv[1]);
     exit(1);
   }
   if (ehdr->e_ident[EI_CLASS] != ELFCLASS32) {

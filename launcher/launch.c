@@ -8,7 +8,7 @@ int main(int argc, char** argv)
   }
   // 1. carry out necessary checks on the input ELF file
   // 2. passing it to the loader for carrying out the loading/execution
-  load_and_run_elf(argv[1]);
+  load_and_run_elf(argv);
   // 3. invoke the cleanup routine inside the loader  
   loader_cleanup();
   return 0;

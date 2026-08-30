@@ -3,15 +3,15 @@ org 0x7c00
 
 start:
     ; The BIOS loads this boot sector at 0x7C00.
-    ; TODO: Make SI point to the first character of `message`.
+    ; Make SI point to the first character of `message`.
     ; Hint: `lodsb` will use SI.
-    ______________________
+    mov si, message
 
 
 print:
-    ; TODO: Read the next character from the string.
+    ; Read the next character from the string.
     ; After this instruction, AL should contain the character.
-    ______________________
+    lodsb
 
     ; Check whether we reached the end of the string.
     cmp al, 0
@@ -21,23 +21,23 @@ print:
     ; AH = 0x0E means "display the character in AL".
     mov ah, 0x0e
 
-    ; TODO: Call the BIOS video service.
-    ______________________
+    ; Call the BIOS video service.
+    int 0x10
 
-    ; TODO: Go back and process the next character.
-    ______________________
+    ; Go back and process the next character.
+    jmp print
 
 
 hang:
     ; We are finished printing.
-    ; TODO: Disable interrupts.
-    ______________________
+    ; Disable interrupts.
+    cli
 
-    ; TODO: Halt the CPU.
-    ______________________
+    ; Halt the CPU.
+    hlt
 
-    ; TODO: Stay here forever.
-    ______________________
+    ; Stay here forever (in case an NMI wakes it back up from hlt).
+    jmp hang
 
 
 message:
@@ -45,9 +45,9 @@ message:
 
 
 ; A boot sector must be exactly 512 bytes.
-; TODO: Fill the unused space with zeroes.
-______________________
+; Fill the unused space with zeroes.
+times 510-($-$$) db 0
 
 
-; TODO: Add the boot-sector signature.
-______________________
+; Add the boot-sector signature.
+dw 0xaa55
